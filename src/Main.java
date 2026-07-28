@@ -3,6 +3,84 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
+    public static char getLetterGrade(int grade) {
+        if (grade >= 85) return 'A';
+        else if (grade >= 75) return 'B';
+        else if (grade >= 65) return 'C';
+        else if (grade >= 50) return 'D';
+        else return 'F';
+    }
+
+    public static void displayStudentNames(String[] studentNames){
+        for (int i = 0 ; i < studentNames.length ; i++)
+            System.out.println(studentNames[i]);
+    }
+
+    public static void displayStudentGrades(String[] studentNames , int[][] studentGrades){
+        for (int i = 0; i < studentGrades.length; i++) {
+            System.out.println(studentNames[i] + "'s grades:");
+            for (int j = 0; j < studentGrades[i].length; j++) {
+                System.out.println("  Subject " + (j + 1) + ": " + studentGrades[i][j] + " (" + getLetterGrade(studentGrades[i][j]) + ")");
+            }
+        }
+    }
+
+    public static void findStudent(String searchTerm , String[] studentNames , int[][] studentGrades){
+        boolean found = false;
+        for (int i = 0; i < studentNames.length; i++) {
+            if (studentNames[i].equalsIgnoreCase(searchTerm)){
+                System.out.println(studentNames[i] + "'s grades:");
+                for (int j = 0; j < studentGrades[i].length; j++) {
+                    System.out.println("  Subject " + (j + 1) + ": " + studentGrades[i][j] + " (" + getLetterGrade(studentGrades[i][j]) + ")");
+                }
+                found = true;
+            }
+        }
+        if (!found){
+            System.out.println("Student not found");
+        }
+    }
+
+    public static int countPassedStudents(int[][] studentGrades){
+        int passedCount = 0;
+        for (int i = 0; i < studentGrades.length; i++) {
+            int sum = 0;
+            for (int j = 0; j < studentGrades[i].length; j++) {
+                sum += studentGrades[i][j];
+            }
+            double average = sum / (double) 3;
+            if (average >= 50) {
+                passedCount++;
+            }
+        }
+        return passedCount;
+    }
+
+    public static void displaySubjectsAverageGrades(int[][] studentsGrades){
+        int studentsNumber = 5;
+        int subjectsNumber = 3;
+        for (int i = 0 ; i < subjectsNumber ; i++){
+            int sum = 0;
+            for (int j = 0 ; j < studentsNumber ; j++){
+                sum += studentsGrades[j][i];
+            }
+            double average = sum / (double) studentsNumber;
+            System.out.println("Subject " + (i + 1) + " average: " + average);
+        }
+    }
+
+    public static void displayMaxGradePerSubject(int[][] studentGrades){
+        for (int i = 0 ; i < 3 ; i++){
+            int max = studentGrades[0][i];
+            for (int j = 0 ; j < 5 ; j++){
+                if (studentGrades[j][i] > max)
+                    max = studentGrades[j][i];
+            }
+            System.out.println("Subject " + (i+1) + " max grade is: " +max);
+        }
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String[] studentNames = new String[5];
@@ -71,16 +149,10 @@ public class Main {
             }
             switch (userChoice){
                 case 1 ->{
-                    for (int i = 0 ; i < studentNames.length ; i++)
-                        System.out.println(studentNames[i]);
+                    displayStudentNames(studentNames);
                 }
-                case 2 ->{
-                        for (int i = 0; i < studentGrades.length; i++) {
-                            System.out.println(studentNames[i] + "'s grades:");
-                            for (int j = 0; j < studentGrades[i].length; j++) {
-                                System.out.println("  Subject " + (j + 1) + ": " + studentGrades[i][j]);
-                            }
-                        }
+                case 2 -> {
+                    displayStudentGrades(studentNames, studentGrades);
                 }
                 case 3 ->{
                     sc.nextLine();
@@ -94,33 +166,11 @@ public class Main {
                             System.out.println("Please enter a valid name");
                         }
                     }
-                    boolean found = false;
-                    for (int i = 0; i < studentNames.length; i++) {
-                        if (studentNames[i].equalsIgnoreCase(term)){
-                            System.out.println(studentNames[i] + "'s grades:");
-                            for (int j = 0; j < studentGrades[i].length; j++) {
-                                System.out.println("  Subject " + (j + 1) + ": " + studentGrades[i][j]);
-                            }
-                            found = true;
-                        }
-                    }
-                    if (!found){
-                        System.out.println("Student not found");
-                    }
+                    findStudent(term,studentNames,studentGrades);
                 }
                 case 4 -> {
-                    int passedCount = 0;
-                    for (int i = 0; i < studentGrades.length; i++) {
-                        int sum = 0;
-                        for (int j = 0; j < studentGrades[i].length; j++) {
-                            sum += studentGrades[i][j];
-                        }
-                        double average = sum / 3;
-                        if (average >= 50) {
-                            passedCount++;
-                        }
-                    }
-                    System.out.println("Number of passed students: " + passedCount);
+                    int passedStudents = countPassedStudents(studentGrades);
+                    System.out.println("Number of passed students: " + passedStudents);
                 }
                 case 0 -> {
                     System.out.println("Thank You, Goodbye");
@@ -128,5 +178,7 @@ public class Main {
             }
 
         }while (userChoice != 0);
+        displaySubjectsAverageGrades(studentGrades);
+        displayMaxGradePerSubject(studentGrades);
     }
 }
